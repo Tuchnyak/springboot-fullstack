@@ -1,7 +1,7 @@
 package com.amigoscode.customer;
 
 import com.amigoscode.exception.DuplicateResourceException;
-import com.amigoscode.exception.ResourceNotChangedException;
+import com.amigoscode.exception.RequestValidationException;
 import com.amigoscode.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -43,36 +43,31 @@ public class CustomerService {
     }
 
     public void updateCustomer(Integer id, CustomerUpdateRequest request) {
-        if (!customerDAO.existsPersonWithId(id)) {
-            throw new ResourceNotFoundException("There is no customer with ID = %s".formatted(id));
-        }
-        var customerOptional = customerDAO.selectCustomerById(id);
-        boolean isChangeExists = checkChanges(customerOptional.get(), request);
-        if (!isChangeExists) {
-            throw new ResourceNotChangedException("no data changes found");
-        }
+        var customer = getCustomer(id);
 
-        var customer = customerOptional.get();
-        if (request.name() != null)
-            customer.setName(request.name());
-        if (request.email() != null)
-            customer.setEmail(request.email());
-        if (request.age() != null)
-            customer.setAge(request.age());
-
-        customerDAO.insertCustomer(customer);
-    }
-
-    private boolean checkChanges(Customer customer, CustomerUpdateRequest request) {
         boolean changes = false;
 
-        if (request.name() != null && !request.name().equals(customer.getName()))
+        if (request.email() != null && !request.email().equals(customer.getEmail())) {
+            if (customerDAO.existsPersonWithEmail(request.email())) {
+                throw new DuplicateResourceException("Email already taken");
+            }
+            customer.setEmail(request.email());
             changes = true;
-        if (request.email() != null && !request.email().equals(customer.getEmail()))
+        }
+        if (request.name() != null && !request.name().equals(customer.getName())) {
+            customer.setName(request.name());
             changes = true;
-        if (request.age() != null && !request.age().equals(customer.getAge()))
+        }
+        if (request.age() != null && !request.age().equals(customer.getAge())) {
+            customer.setAge(request.age());
             changes = true;
+        }
 
-        return changes;
+        if (!changes) {
+            throw new RequestValidationException("no data changes found");
+        }
+
+        customerDAO.updateCustomer(customer);
     }
+
 }

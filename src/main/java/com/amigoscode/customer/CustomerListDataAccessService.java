@@ -64,4 +64,9 @@ public class CustomerListDataAccessService implements CustomerDAO {
         var opt = selectCustomerById(id);
         opt.ifPresent(CUSTOMERS::remove);
     }
+
+    @Override
+    public void updateCustomer(Customer customerToUpdate) {
+        CUSTOMERS.add(customerToUpdate);
+    }
 }
