@@ -34,8 +34,10 @@ public class CustomerService {
         customerDAO.insertCustomer(new CustomerMapper(customerRegistrationRequest).map());
     }
 
-    public void deleteCustomer(Integer id) {
-        var customer = getCustomer(id);
-        customerDAO.deleteCustomer(id);
+    public void deleteCustomerById(Integer id) {
+        if (!customerDAO.existsPersonWithId(id)) {
+            throw new ResourceNotFoundException("There is no customer with ID = %s".formatted(id));
+        }
+        customerDAO.deleteCustomerById(id);
     }
 }

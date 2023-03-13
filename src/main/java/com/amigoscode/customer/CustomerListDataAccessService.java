@@ -54,7 +54,13 @@ public class CustomerListDataAccessService implements CustomerDAO {
     }
 
     @Override
-    public void deleteCustomer(Integer id) {
+    public boolean existsPersonWithId(Integer id) {
+        return CUSTOMERS.stream()
+                .anyMatch(c -> c.getId().equals(id));
+    }
+
+    @Override
+    public void deleteCustomerById(Integer id) {
         var opt = selectCustomerById(id);
         opt.ifPresent(CUSTOMERS::remove);
     }
