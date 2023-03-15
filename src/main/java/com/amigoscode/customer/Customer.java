@@ -6,17 +6,28 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Table(
+        name = "customer",
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "cons_customer_email_unique",
+                        columnNames = {"email"}
+                )
+        }
+)
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 public class Customer {
 
-    public static final String CUSTOMER_ID_SEQUENCE = "customer_id_sequence";
+    public static final String CUSTOMER_ID_SEQUENCE = "customer_id_seq";
 
     @Id
     @SequenceGenerator(
             name = CUSTOMER_ID_SEQUENCE,
-            sequenceName = CUSTOMER_ID_SEQUENCE
+            sequenceName = CUSTOMER_ID_SEQUENCE,
+//            initialValue = 1,
+            allocationSize = 1
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
