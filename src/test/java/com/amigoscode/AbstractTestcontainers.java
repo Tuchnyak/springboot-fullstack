@@ -1,15 +1,22 @@
 package com.amigoscode;
 
+import com.github.javafaker.Faker;
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeAll;
+import org.springframework.boot.jdbc.DataSourceBuilder;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import javax.sql.DataSource;
+
 @Testcontainers
 public abstract class AbstractTestcontainers {
+
+    protected static final Faker FAKER = Faker.instance();
 
     @Container
     protected static final PostgreSQLContainer<?> POSTGRE_SQL_CONTAINER
@@ -33,6 +40,19 @@ public abstract class AbstractTestcontainers {
                 POSTGRE_SQL_CONTAINER.getPassword()
         ).load();
         flyway.migrate();
+    }
+
+    protected JdbcTemplate getJdbcTemplate() {
+        return new JdbcTemplate(getDataSource());
+    }
+
+    private DataSource getDataSource() {
+        return DataSourceBuilder.create()
+                .driverClassName(POSTGRE_SQL_CONTAINER.getDriverClassName())
+                .url(POSTGRE_SQL_CONTAINER.getJdbcUrl())
+                .username(POSTGRE_SQL_CONTAINER.getUsername())
+                .password(POSTGRE_SQL_CONTAINER.getPassword())
+                .build();
     }
 
 }
