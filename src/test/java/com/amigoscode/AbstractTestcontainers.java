@@ -19,8 +19,7 @@ public abstract class AbstractTestcontainers {
     protected static final Faker FAKER = Faker.instance();
 
     @Container
-    protected static final PostgreSQLContainer<?> POSTGRE_SQL_CONTAINER
-            = new PostgreSQLContainer<>("postgres:latest")
+    protected static final PostgreSQLContainer<?> POSTGRE_SQL_CONTAINER = new PostgreSQLContainer<>("postgres:latest")
             .withDatabaseName("amigoscode-dao-unit-test")
             .withUsername("amigoscode")
             .withPassword("password");
