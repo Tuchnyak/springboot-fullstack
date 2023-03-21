@@ -186,8 +186,8 @@ public class CustomerIntegrationTest {
                 .findFirst()
                 .orElseThrow();
 
-        String newMail = RANDOM.nextInt(100) + "mail";
-        CustomerUpdateRequest updateRequest = new CustomerUpdateRequest(null, newMail, null);
+        String newName = "Alex NEW";
+        CustomerUpdateRequest updateRequest = new CustomerUpdateRequest(newName, null, null);
 
         webTestClient.put()
                 .uri(URI + "/{id}", id)
@@ -209,7 +209,7 @@ public class CustomerIntegrationTest {
                 .returnResult()
                 .getResponseBody();
 
-        Customer expectedUpdatedCustomer = new Customer(id, name, newMail, age);
+        Customer expectedUpdatedCustomer = new Customer(id, newName, email, age);
 
         assertThat(actualUpdated).isEqualTo(expectedUpdatedCustomer);
     }
