@@ -16,9 +16,13 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>spring-boot-example</name>
     <description>Demo project for Spring Boot</description>
+    <organization>
+        <name>greenlampsoftware</name>
+    </organization>
 
     <properties>
         <java.version>17</java.version>
+        <docker.username>tuchnyak</docker.username>
     </properties>
 
     <dependencies>
@@ -153,6 +157,22 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>jib-maven-plugin</artifactId>
+                <version>3.3.1</version>
+                <configuration>
+                    <from>
+                        <image>eclipse-temurin:17</image>
+                    </from>
+                    <to>
+                        <image>docker.io/${docker.username}/${project.artifactId}:${project.version}</image>
+                        <tags>
+                            <tag>latest</tag>
+                        </tags>
+                    </to>
+                </configuration>
             </plugin>
         </plugins>
     </build>

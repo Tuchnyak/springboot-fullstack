@@ -13,27 +13,22 @@ services:
     networks:
       - postgres
     restart: unless-stopped
-  pgadmin:
-    container_name: pgadmin
-    image: dpage/pgadmin4
+  test-api:
+    container_name: test-api
+    image: tuchnyak/spring-boot-example
     environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
-      PGADMIN_CONFIG_SERVER_MODE: 'False'
-    volumes:
-      - pgadmin:/var/lib/pgadmin
+      SPRING_DATASOURCE_URL: "jdbc:postgresql://db:5432/customer"
     ports:
-      - "5050:80"
+      - "9999:9090"
     networks:
       - postgres
-    restart: unless-stopped
     depends_on:
       - db
+    restart: unless-stopped
 
 networks:
   postgres:
     driver: bridge
 
 volumes:
-  postgres:
-  pgadmin:
+  postgres: {}
