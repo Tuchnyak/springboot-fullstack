@@ -31,3 +31,9 @@ build/
 
 ### VS Code ###
 .vscode/
+
+**/target/
+**/.idea/
+**/node_modules
+**/.DS_store
+
